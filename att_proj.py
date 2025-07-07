@@ -147,7 +147,7 @@ if submit_to_sheet:
             # Determine punctuality outcome
             try:
                 time_obj = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").time()
-                punctuality_outcome = "You came on time" if (time_obj.hour < 9 or (time_obj.hour == 9 and time_obj.minute <= 30)) else "You are late"
+                punctuality_outcome = "You came on time" if (time_obj.hour < 8 or (time_obj.hour == 8 and time_obj.minute <= 45)) else "You are late"
             except Exception:
                 punctuality_outcome = "Invalid timestamp"
 
