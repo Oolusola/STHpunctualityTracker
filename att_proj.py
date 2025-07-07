@@ -2,7 +2,6 @@ import streamlit as st
 from datetime import datetime
 from geopy.distance import geodesic
 import gspread
-
 from google.oauth2.service_account import Credentials
 
 st.set_page_config(page_title="Attendance Logger", layout="centered")
@@ -78,7 +77,7 @@ selected_facility_name = st.selectbox("🏥 Select your facility", facility_name
 col1, col2 = st.columns(2)
 with col1:
     designation_options = [
-        "I3TR", "TSP", "EDEC", "M&E Officer", "Case Manager", "Adhrnce Nurse", "Data Clerck", "Focal Person"
+        "I3TR", "TSP", "EDEC", "M&E Officer", "Case Manager", "Adhernce Nurse", "Data Clerck", "Focal Person"
     ]
     designation = st.selectbox("👨‍💼 Select your designation", designation_options)
 
@@ -168,9 +167,9 @@ if submit_to_sheet:
                 punctuality_outcome    # Punctuality Outcome
             ]
             try:
-                from oauth2client.service_account import ServiceAccountCredentials
                 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-                creds = ServiceAccountCredentials.from_json_keyfile_name("streamlit-attendance-app.json", scope)
+                service_account_info = dict(st.secrets["google_service_account"])
+                creds = Credentials.from_service_account_info(service_account_info, scopes=scope)
                 client = gspread.authorize(creds)
                 sheet = client.open("Attendant tracker")
                 worksheet = sheet.sheet1
@@ -194,8 +193,5 @@ if submit_to_sheet:
         else:
             st.error("❌ Facility not found for submission.")
 
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-service_account_info = dict(st.secrets["google_service_account"])
-creds = Credentials.from_service_account_info(service_account_info, scopes=scope)
-client = gspread.authorize(creds)
+
 
