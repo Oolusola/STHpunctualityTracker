@@ -139,7 +139,7 @@ if submit_to_sheet:
             facility_coord = (selected_facility["Latitude"], selected_facility["Longitude"])
             user_coord = (lat, lon)
             distance_km = geodesic(facility_coord, user_coord).km
-            if distance_km > 2:
+            if distance_km > 0.5:
                 punctuality_status = "not in the facility"
             else:
                 punctuality_status = "arrived at the facility"
