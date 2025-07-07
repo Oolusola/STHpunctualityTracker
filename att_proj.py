@@ -3,6 +3,13 @@ from datetime import datetime
 from geopy.distance import geodesic
 import gspread
 
+from google.oauth2.service_account import Credentials
+
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+service_account_info = dict(st.secrets["google_service_account"])
+creds = Credentials.from_service_account_info(service_account_info, scopes=scope)
+client = gspread.authorize(creds)
+
 st.set_page_config(page_title="Attendance Logger", layout="centered")
 st.title("📋 STH Facility Attendant Form")
 
