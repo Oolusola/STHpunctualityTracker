@@ -114,30 +114,37 @@ if get_location_auto:
 
 import time
 
-# Camera state trigger
+# Initialize session states
 if "camera_started" not in st.session_state:
     st.session_state.camera_started = False
 if "photo_taken" not in st.session_state:
     st.session_state.photo_taken = False
+if "photo_preview" not in st.session_state:
+    st.session_state.photo_preview = None
+if "show_preview" not in st.session_state:
+    st.session_state.show_preview = False
 
-# Camera activation button
+# Trigger camera
 if st.button("📸 Take a photo for verification"):
     st.session_state.camera_started = True
     st.session_state.photo_taken = False
+    st.session_state.show_preview = False
 
-# Show camera if activated
+# Capture photo
 if st.session_state.camera_started and not st.session_state.photo_taken:
     photo = st.camera_input("📸 Please take your selfie")
     if photo:
         st.session_state.photo_taken = True
-        st.session_state.photo = photo
-        time.sleep(5)
         st.session_state.camera_started = False
+        st.session_state.photo_preview = photo
         st.success("✅ Your selfie has been taken and submitted for verification.")
+        st.session_state.show_preview = True
+        time.sleep(2)
+        st.session_state.show_preview = False  # Hide after 2 seconds
 
-# Preview taken photo
-if st.session_state.photo_taken and not st.session_state.camera_started:
-    st.image(st.session_state.photo, caption="Your submitted selfie", use_column_width=True)
+# Show preview temporarily
+if st.session_state.show_preview:
+    st.image(st.session_state.photo_preview, caption="Your submitted selfie", use_container_width=True)
 
 
 # --- Submit to Google Sheet ---
