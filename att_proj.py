@@ -3,9 +3,11 @@ from datetime import datetime
 from geopy.distance import geodesic
 import gspread
 from google.oauth2.service_account import Credentials
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 st.set_page_config(page_title="Attendance Logger", layout="centered")
-st.title("📋 STH Facility Attendant Form")
+st.title("📋 Daily Attendance Tracker")
 
 # Full facility data provided by the user
 facility_data = [
@@ -124,7 +126,8 @@ if submit_to_sheet:
             else:
                 lat = lat_val
                 lon = lon_val
-                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                timestamp = datetime.now(ZoneInfo("Africa/Lagos")).strftime("%Y-%m-%d %H:%M:%S")
+              #  timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         except ValueError:
             valid_coords = False
         if not valid_coords:
@@ -192,6 +195,4 @@ if submit_to_sheet:
                     st.error(f"❌ Failed to submit to Google Sheet: {e}")
         else:
             st.error("❌ Facility not found for submission.")
-
-
 
