@@ -110,6 +110,8 @@ get_location_auto = st.button("Get My Location Automatically")
 if get_location_auto:
     st.info("_GPS is taking time to load... pls, explore the Get My Location manually option._")
 
+photo = st.camera_input("📸 Optional: Take a selfie for verification")
+
 # --- Submit to Google Sheet ---
 submit_to_sheet = st.button("✅ Submit Attendance to Google Sheet")
 
