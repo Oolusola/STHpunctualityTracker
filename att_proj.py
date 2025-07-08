@@ -122,11 +122,10 @@ if "photo_preview" not in st.session_state:
 if "show_preview" not in st.session_state:
     st.session_state.show_preview = False
 
-with btn_col2:
-    if st.button("📸 Take a photo for verification"):
-        st.session_state.camera_started = True
-        st.session_state.photo_taken = False
-        st.session_state.show_preview = False
+if st.button("📸 Take a photo for verification"):
+    st.session_state.camera_started = True
+    st.session_state.photo_taken = False
+    st.session_state.show_preview = False
 
 if st.session_state.camera_started and not st.session_state.photo_taken:
     photo = st.camera_input("📸 Please take your selfie")
