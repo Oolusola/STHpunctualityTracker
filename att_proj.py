@@ -110,36 +110,9 @@ get_location_auto = st.button("Get My Location Automatically")
 if get_location_auto:
     st.info("_GPS is taking time to load... pls, explore the Get My Location manually option._")
 
-#photo = st.camera_input("📸 Optional: Take a selfie for verification")
+photo = st.camera_input("📸 Optional: Take a selfie for verification")
 
-# --- Camera Input Logic ---
-if "camera_started" not in st.session_state:
-    st.session_state.camera_started = False
-if "photo_taken" not in st.session_state:
-    st.session_state.photo_taken = False
-if "photo_preview" not in st.session_state:
-    st.session_state.photo_preview = None
-if "show_preview" not in st.session_state:
-    st.session_state.show_preview = False
 
-if st.button("📸 Take a photo for verification"):
-    st.session_state.camera_started = True
-    st.session_state.photo_taken = False
-    st.session_state.show_preview = False
-
-if st.session_state.camera_started and not st.session_state.photo_taken:
-    photo = st.camera_input("📸 Please take your selfie")
-    if photo:
-        st.session_state.photo_taken = True
-        st.session_state.camera_started = False
-        st.session_state.photo_preview = photo
-        st.success("✅ Your selfie has been taken and submitted for verification.")
-        st.session_state.show_preview = True
-        time.sleep(2)
-        st.session_state.show_preview = False
-
-if st.session_state.show_preview:
-    st.image(st.session_state.photo_preview, caption="Your submitted selfie", use_container_width=True)
 
 # --- Submit to Google Sheet ---
 submit_to_sheet = st.button("✅ Submit Attendance to Google Sheet")
