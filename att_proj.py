@@ -142,6 +142,9 @@ if st.session_state.camera_started and not st.session_state.photo_taken:
 if st.session_state.show_preview:
     st.image(st.session_state.photo_preview, caption="Your submitted selfie", use_container_width=True)
 
+# --- Submit to Google Sheet ---
+submit_to_sheet = st.button("✅ Submit Attendance to Google Sheet")
+
 
 # --- Submit to Google Sheet ---
 submit_to_sheet = st.button("✅ Submit Attendance to Google Sheet")
