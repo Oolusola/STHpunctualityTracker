@@ -112,9 +112,7 @@ if get_location_auto:
 
 #photo = st.camera_input("📸 Optional: Take a selfie for verification")
 
-import time
-
-# Initialize session states
+# --- Camera Input Logic ---
 if "camera_started" not in st.session_state:
     st.session_state.camera_started = False
 if "photo_taken" not in st.session_state:
@@ -124,13 +122,12 @@ if "photo_preview" not in st.session_state:
 if "show_preview" not in st.session_state:
     st.session_state.show_preview = False
 
-# Trigger camera
-if st.button("📸 Take a photo for verification"):
-    st.session_state.camera_started = True
-    st.session_state.photo_taken = False
-    st.session_state.show_preview = False
+with btn_col2:
+    if st.button("📸 Take a photo for verification"):
+        st.session_state.camera_started = True
+        st.session_state.photo_taken = False
+        st.session_state.show_preview = False
 
-# Capture photo
 if st.session_state.camera_started and not st.session_state.photo_taken:
     photo = st.camera_input("📸 Please take your selfie")
     if photo:
@@ -140,9 +137,8 @@ if st.session_state.camera_started and not st.session_state.photo_taken:
         st.success("✅ Your selfie has been taken and submitted for verification.")
         st.session_state.show_preview = True
         time.sleep(2)
-        st.session_state.show_preview = False  # Hide after 2 seconds
+        st.session_state.show_preview = False
 
-# Show preview temporarily
 if st.session_state.show_preview:
     st.image(st.session_state.photo_preview, caption="Your submitted selfie", use_container_width=True)
 
