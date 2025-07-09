@@ -11,7 +11,7 @@ st.title("📋 Daily Attendance Tracker")
 
 # Full facility data provided by the user
 facility_data = [
-    {"Facility": "State office", "Landmark": "KadunaNorth", "Latitude": 10.51509, "Longitude": 7.43844, "Postal code": "800283"},
+     {"Facility": "State office", "Landmark": "KadunaNorth", "Latitude": 10.51509, "Longitude": 7.43844, "Postal code": "800283"},
     {"Facility": "Jibrin Maigwari General Hospital", "Landmark": "BirninGwari", "Latitude": 10.65826, "Longitude": 6.53479, "Postal code": "800119"},
     {"Facility": "Amina Hospital", "Landmark": "Chikun", "Latitude": 10.4554067, "Longitude": 7.4258814, "Postal code": "800282"},
     {"Facility": "Sabon Tasha General Hospital", "Landmark": "Chikun", "Latitude": 10.4489626, "Longitude": 7.478136, "Postal code": "800104"},
@@ -69,6 +69,7 @@ facility_data = [
     {"Facility": "St. Luke's Hospital, Wusasa", "Landmark": "Zaria", "Latitude": 11.0764519, "Longitude": 7.6792299, "Postal code": "810282"},
     {"Facility": "Virtual Hospital", "Landmark": "Chikun", "Latitude": 10.456995, "Longitude": 7.454195, "Postal code": "810282"},
     {"Facility": "Kaduna CSCC", "Landmark": "Chikun", "Latitude": 10.5036, "Longitude": 7.4337, "Postal code": "800283"},
+
 ]
 
 # --- Inputs ---
@@ -172,7 +173,12 @@ if submit_to_sheet:
 
             try:
                 time_obj = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").time()
-                punctuality_outcome = "You came on time" if (time_obj.hour < 8 or (time_obj.hour == 8 and time_obj.minute <= 45)) else "You are late"
+                if distance_km > 0.5 and (time_obj.hour < 8 or (time_obj.hour == 8 and time_obj.minute <= 45)):
+                    punctuality_outcome = "Invalid checkin"
+                elif time_obj.hour < 8 or (time_obj.hour == 8 and time_obj.minute <= 45):
+                    punctuality_outcome = "You came on time"
+                else:
+                    punctuality_outcome = "You are late"
             except Exception:
                 punctuality_outcome = "Invalid timestamp"
 
