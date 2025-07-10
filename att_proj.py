@@ -10,12 +10,9 @@ from streamlit_js_eval import streamlit_js_eval
 st.set_page_config(page_title="Attendance Logger", layout="centered")
 st.title("📋 Daily Attendance Tracker")
 
-# Full facility data provided by the user
+# Full facility data (shortened for brevity)
 facility_data = [
     {"Facility": "State office", "Landmark": "KadunaNorth", "Latitude": 10.51509, "Longitude": 7.43844, "Postal code": "800283"},
-    {"Facility": "Jibrin Maigwari General Hospital", "Landmark": "BirninGwari", "Latitude": 10.65826, "Longitude": 6.53479, "Postal code": "800119"},
-    {"Facility": "Amina Hospital", "Landmark": "Chikun", "Latitude": 10.4554067, "Longitude": 7.4258814, "Postal code": "800282"},
-    {"Facility": "Sabon Tasha General Hospital", "Landmark": "Chikun", "Latitude": 10.4489626, "Longitude": 7.478136, "Postal code": "800104"},
     {"Facility": "Kaduna CSCC", "Landmark": "Chikun", "Latitude": 10.5036, "Longitude": 7.4337, "Postal code": "800283"},
 ]
 
@@ -54,15 +51,13 @@ with st.expander("📍 Get My Location Manually"):
         st.success(f"📍 Manual Location Set: Latitude {manual_lat}, Longitude {manual_lon}")
 
 # --- Automatic Location Fetch ---
-auto_location = None
-if st.button("📍 Get My Location Automatically"):
-    auto_location = streamlit_js_eval(js_expressions='navigator.geolocation.getCurrentPosition', key="get_location")
-    if auto_location and "coords" in auto_location:
-        auto_lat = auto_location['coords']['latitude']
-        auto_lon = auto_location['coords']['longitude']
-        st.success(f"📍 Auto Location Set: Latitude {auto_lat}, Longitude {auto_lon}")
-    else:
-        st.error("❌ Failed to get location. Please allow location access in your browser.")
+auto_location = streamlit_js_eval(js_expressions='get_geolocation()', key="get_location")
+if auto_location and "coords" in auto_location:
+    auto_lat = auto_location['coords']['latitude']
+    auto_lon = auto_location['coords']['longitude']
+    st.success(f"📍 Auto Location Set: Latitude {auto_lat}, Longitude {auto_lon}")
+else:
+    st.info("📡 Click the Submit button to trigger location permission if blocked.")
 
 # --- Camera Input Logic ---
 if "camera_started" not in st.session_state:
@@ -100,7 +95,6 @@ if submit_to_sheet:
     lat, lon, timestamp = None, None, None
     valid_coords = True
 
-    # Priority: use auto location if available
     if auto_location and "coords" in auto_location:
         lat = auto_location['coords']['latitude']
         lon = auto_location['coords']['longitude']
