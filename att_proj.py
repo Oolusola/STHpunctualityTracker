@@ -5,7 +5,7 @@ from geopy.distance import geodesic
 import gspread
 from google.oauth2.service_account import Credentials
 import time
-from streamlit_js_eval import streamlit_js_eval
+from streamlit_js_eval import streamlit_js_eval, get_geolocation
 
 st.set_page_config(page_title="Attendance Logger", layout="centered")
 st.title("📋 Daily Attendance Tracker")
@@ -51,16 +51,16 @@ with st.expander("📍 Get My Location Manually"):
         st.success(f"📍 Manual Location Set: Latitude {manual_lat}, Longitude {manual_lon}")
 
 # --- Trigger Geolocation on Button Click ---
-if st.button("📍 Get My Location Automatically"):
-    auto_location = streamlit_js_eval(js_expressions='get_geolocation()', key="manual_location_trigger")
+get_location = st.button("📍 Get My Location Automatically")
+auto_location = None
+if get_location:
+    auto_location = get_geolocation()
     if auto_location and "coords" in auto_location:
         auto_lat = auto_location['coords']['latitude']
         auto_lon = auto_location['coords']['longitude']
         st.success(f"📍 Auto Location Set: Latitude {auto_lat}, Longitude {auto_lon}")
     else:
-        st.warning("📡 Please allow location access in your browser when prompted.")
-else:
-    auto_location = None
+        st.warning("📡 Failed to get location. Please allow location access in your browser.")
 
 # --- Camera Input Logic ---
 if "camera_started" not in st.session_state:
