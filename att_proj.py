@@ -50,14 +50,17 @@ with st.expander("📍 Get My Location Manually"):
     if manual_lat and manual_lon:
         st.success(f"📍 Manual Location Set: Latitude {manual_lat}, Longitude {manual_lon}")
 
-# --- Automatic Location Fetch ---
-auto_location = streamlit_js_eval(js_expressions='get_geolocation()', key="get_location")
-if auto_location and "coords" in auto_location:
-    auto_lat = auto_location['coords']['latitude']
-    auto_lon = auto_location['coords']['longitude']
-    st.success(f"📍 Auto Location Set: Latitude {auto_lat}, Longitude {auto_lon}")
+# --- Trigger Geolocation on Button Click ---
+if st.button("📍 Get My Location Automatically"):
+    auto_location = streamlit_js_eval(js_expressions='get_geolocation()', key="manual_location_trigger")
+    if auto_location and "coords" in auto_location:
+        auto_lat = auto_location['coords']['latitude']
+        auto_lon = auto_location['coords']['longitude']
+        st.success(f"📍 Auto Location Set: Latitude {auto_lat}, Longitude {auto_lon}")
+    else:
+        st.warning("📡 Please allow location access in your browser when prompted.")
 else:
-    st.info("📡 Click the Submit button to trigger location permission if blocked.")
+    auto_location = None
 
 # --- Camera Input Logic ---
 if "camera_started" not in st.session_state:
