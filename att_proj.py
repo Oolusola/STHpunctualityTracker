@@ -5,7 +5,7 @@ from geopy.distance import geodesic
 import gspread
 from google.oauth2.service_account import Credentials
 import time
-from streamlit_js_eval import streamlit_js_eval, get_geolocation
+from streamlit_js_eval import streamlit_js_eval
 
 st.set_page_config(page_title="Attendance Logger", layout="centered")
 st.title("📋 Daily Attendance Tracker")
@@ -51,13 +51,25 @@ with st.expander("📍 Get My Location Manually"):
         st.success(f"📍 Manual Location Set: Latitude {manual_lat}, Longitude {manual_lon}")
 
 # --- Trigger Geolocation on Button Click ---
-get_location = st.button("📍 Get My Location Automatically")
-auto_location = None
-if get_location:
-    auto_location = get_geolocation()
-    if auto_location and "coords" in auto_location:
-        auto_lat = auto_location['coords']['latitude']
-        auto_lon = auto_location['coords']['longitude']
+auto_lat, auto_lon = None, None
+if st.button("📍 Get My Location Automatically"):
+    auto_location = streamlit_js_eval(
+        js_expressions="""
+        new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => resolve({latitude: pos.coords.latitude, longitude: pos.coords.longitude}),
+                (err) => reject({error: err.message})
+            );
+        })
+        """,
+        key="get_location_click"
+    )
+
+    if isinstance(auto_location, dict) and "latitude" in auto_location:
+        auto_lat = auto_location.get("latitude")
+        auto_lon = auto_location.get("longitude")
+        st.session_state["auto_lat"] = auto_lat
+        st.session_state["auto_lon"] = auto_lon
         st.success(f"📍 Auto Location Set: Latitude {auto_lat}, Longitude {auto_lon}")
     else:
         st.warning("📡 Failed to get location. Please allow location access in your browser.")
@@ -98,9 +110,9 @@ if submit_to_sheet:
     lat, lon, timestamp = None, None, None
     valid_coords = True
 
-    if auto_location and "coords" in auto_location:
-        lat = auto_location['coords']['latitude']
-        lon = auto_location['coords']['longitude']
+    if "auto_lat" in st.session_state and "auto_lon" in st.session_state:
+        lat = st.session_state.auto_lat
+        lon = st.session_state.auto_lon
         timestamp = datetime.now(ZoneInfo("Africa/Lagos")).strftime("%Y-%m-%d %H:%M:%S")
     elif manual_lat and manual_lon:
         try:
